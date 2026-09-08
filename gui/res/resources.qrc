@@ -1,0 +1,46 @@
+<RCC>
+  <qresource prefix="/icons">
+    <file>zanith-logo.svg</file>
+    <file>zanith_promo_qr.png</file>
+    <file>youtube-channel-avatar.png</file>
+    <file>ps5-horizontal.png</file>
+
+    <file>settings-20px.svg</file>
+    <file>tab-video.svg</file>
+    <file>tab-stream.svg</file>
+    <file>tab-network.svg</file>
+    <file>tab-console.svg</file>
+    <file>tab-keys.svg</file>
+    <file>tab-controller.svg</file>
+    <file>tab-remote.svg</file>
+    <file>tab-profile.svg</file>
+    <file>add-24px.svg</file>
+    <file>discover-24px.svg</file>
+    <file>discover-off-24px.svg</file>
+    <file>chiaking.svg</file>
+    <file>chiaking-logo.svg</file>
+    <file>chiaking-logo-white.svg</file>
+    <file>chiaki.svg</file>
+    <file>chiaki_macos.svg</file>
+    <file>chiaking_macos.svg</file>
+    <file>console-ps4.svg</file>
+    <file>console-ps5.svg</file>
+    <file>buttons-ps.svg</file>
+    <file>buttons-deck.svg</file>
+    <file>l1.svg</file>
+    <file>r1.svg</file>
+    <file>l3.svg</file>
+    <file>r3.svg</file>
+    <file>options.svg</file>
+    <file>steam_hero.png</file>
+    <file>steam_icon.png</file>
+    <file>steam_landscape.png</file>
+    <file>steam_logo.png</file>
+    <file>steam_portrait.png</file>
+  </qresource>
+  <qresource prefix="/shaders">
+    <file alias="FSR.glsl">shaders/FSR.glsl</file>
+    <file alias="FSRCNNX_x2_8-0-4-1.glsl">shaders/FSRCNNX_x2_8-0-4-1.glsl</file>
+    <file alias="FSRCNNX_x2_16-0-4-1.glsl">shaders/FSRCNNX_x2_16-0-4-1.glsl</file>
+  </qresource>
+</RCC>

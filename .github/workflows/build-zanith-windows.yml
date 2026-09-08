@@ -1,0 +1,125 @@
+name: Build Zanith 1.2.0 Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows-x64:
+    name: Build Zanith 1.2.0 x64 installer
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - name: Disable Git CRLF conversion
+        shell: pwsh
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
+      - uses: actions/checkout@v4
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw64
+          update: true
+          install: git
+          pacboy: >-
+            ca-certificates:p
+            cc:p
+            cmake:p
+            curl:p
+            diffutils:p
+            fast_float:p
+            fftw:p
+            hidapi:p
+            json-c:p
+            libevent:p
+            lcms2:p
+            libdovi:p
+            meson:p
+            miniupnpc:p
+            gcc:p
+            nasm:p
+            ninja:p
+            openssl:p
+            opus:p
+            pkgconf:p
+            protobuf:p
+            python:p
+            python-protobuf:p
+            python-psutil:p
+            python-glad:p
+            python-jinja:p
+            python-pip:p
+            qt6-base:p
+            qt6-declarative:p
+            qt6-svg:p
+            shaderc:p
+            speexdsp:p
+            spirv-cross:p
+            vulkan:p
+            vulkan-headers:p
+            compiler-rt:p
+
+      - name: Prepare tools and exact upstream submodules
+        run: |
+          pacman -S git make unzip zip --noconfirm
+          scripts/bootstrap-submodules.sh
+
+      - name: Build libplacebo used by this Canary base
+        run: |
+          scripts/build-libplacebo-windows.sh
+
+      - name: Setup FFmpeg 7.1
+        run: |
+          curl -LO https://github.com/streetpea/FFmpeg-Builds/releases/download/latest/ffmpeg-n7.1-latest-win64-gpl-shared-7.1.zip
+          unzip ffmpeg-n7.1-latest-win64-gpl-shared-7.1.zip
+          cp -a "ffmpeg-n7.1-latest-win64-gpl-shared-7.1/bin/." /mingw64/bin
+          cp -a "ffmpeg-n7.1-latest-win64-gpl-shared-7.1/include/." /mingw64/include
+          cp -a "ffmpeg-n7.1-latest-win64-gpl-shared-7.1/lib/." /mingw64/lib
+
+      - name: Build SDL2 compatibility layer
+        run: |
+          INSTALL_PREFIX=/mingw64 scripts/build-sdl2-compat.sh .
+          cp /mingw64/lib/pkgconfig/sdl2-compat.pc /mingw64/lib/pkgconfig/sdl2.pc
+
+      - name: Configure Zanith
+        run: |
+          cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCHIAKI_ENABLE_CLI=OFF -DCHIAKI_ENABLE_TESTS=OFF
+
+      - name: Build Zanith
+        run: |
+          cmake --build build --config Release --clean-first --target chiaki
+
+      - name: Deploy Windows runtime
+        run: |
+          ./scripts/deploy-windows-msys2.sh Zanith-Win build/gui/Zanith.exe "${{ github.workspace }}/build/third-party/cpp-steam-tools" /mingw64 gui/src/qml
+          cp ZANITH_MODIFICATIONS.md Zanith-Win/
+          mkdir -p Zanith-Win/licenses
+          cp LICENSES/AGPL-3.0-only-OpenSSL.txt Zanith-Win/licenses/
+
+      - name: Create portable ZIP
+        run: |
+          zip -r Zanith-1.2.0-Windows-x64-portable.zip Zanith-Win
+
+      - name: Upload portable ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: Zanith-1.2.0-Windows-x64-portable
+          path: Zanith-1.2.0-Windows-x64-portable.zip
+          if-no-files-found: error
+
+      - name: Compile installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.7
+        with:
+          path: "scripts/zanith.iss"
+          options: /O+
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Zanith-1.2.0-Windows-x64-Setup
+          path: Zanith-1.2.0-Setup.exe
+          if-no-files-found: error

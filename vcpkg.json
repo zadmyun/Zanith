@@ -1,0 +1,17 @@
+{
+  "name": "zanith",
+  "version": "1.0.0",
+  "dependencies": [
+    "pkgconf",
+    "sdl2",
+    "protobuf",
+    "openssl",
+    "json-c",
+    "libevent",
+    "miniupnpc",
+    "opus",
+    "lcms",
+    "speexdsp",
+    "vulkan"
+  ]
+}
