@@ -29,6 +29,44 @@ Item {
     property int separateDialogY: 0
     property bool sessionStopDialogActive: false
     property bool sessionPinDialogActive: false
+    property bool dlss5PanelActive: false
+    property bool dlss5NeuralStartedForSession: false
+
+    Timer {
+        id: dlss5SessionEnableTimer
+        interval: 250
+        repeat: true
+        running: !!Chiaki.session && Chiaki.session.connected &&
+                 !view.sessionLoading && !view.sessionError &&
+                 !view.dlss5NeuralStartedForSession
+        onTriggered: {
+            if (Chiaki.window.dlss5BridgeAvailable()) {
+                Chiaki.window.setDlss5Technique("lumenite_Kernel.fx", "Lumenite_Kernel", true);
+                Chiaki.window.setDlss5Technique("DLSS5_Feed.fx", "DLSS5_Feed", true);
+                Chiaki.window.setDlss5Technique("DLSS5_Sharpen.fx", "DLSS5_Sharpen", true);
+            }
+            if (Chiaki.window.dlss5BridgeAvailable() && Chiaki.window.toggleDlss5Neural()) {
+                view.dlss5NeuralStartedForSession = true;
+                stop();
+                dlss5ReadyNotice.restart();
+            }
+        }
+    }
+
+    Timer { id: dlss5ReadyNotice; interval: 5000 }
+
+    Rectangle {
+        anchors { top: parent.top; horizontalCenter: parent.horizontalCenter; topMargin: 12 }
+        width: readyText.implicitWidth + 28; height: 34; radius: 7
+        color: "#D9101A2B"; border.color: "#2879F6"; border.width: 1
+        visible: dlss5ReadyNotice.running
+        z: 1000
+        Label {
+            id: readyText; anchors.centerIn: parent
+            text: "DLSS 5 ativo - pressione Home para configurar"
+            color: "white"; font.pixelSize: 12
+        }
+    }
 
     function grabInput(item) {
         Chiaki.window.grabInput();
@@ -74,6 +112,7 @@ Item {
             separateSessionStopWindow.visible ||
             sessionPinDialogActive ||
             separateSessionPinWindow.visible
+            || dlss5PanelActive
         );
     }
 
@@ -90,6 +129,14 @@ Item {
         updateSeparateMenuGeometry();
         updateOverlayInteractionActive();
         Chiaki.window.setStatsOverlayActive(streamStatsVisible);
+    }
+    Component.onDestruction: {
+        if (dlss5NeuralStartedForSession)
+            Chiaki.window.toggleDlss5Neural();
+        Chiaki.window.setDlss5Technique("DLSS5_Sharpen.fx", "DLSS5_Sharpen", false);
+        Chiaki.window.setDlss5Technique("DLSS5_Feed.fx", "DLSS5_Feed", false);
+        Chiaki.window.setDlss5Technique("lumenite_Kernel.fx", "Lumenite_Kernel", false);
+        Chiaki.window.setDlss5RenoDxConfig("NeuralUplift", "0");
     }
     onStreamStatsVisibleChanged: {
         if (Chiaki.window)
@@ -1218,6 +1265,249 @@ Item {
         onTriggered: root.showMainView()
     }
 
+    Dialog {
+        id: dlss5Panel
+        parent: Overlay.overlay
+        modal: true
+        width: Math.min(600, view.width - 32)
+        height: Math.min(620, view.height - 32)
+        x: Math.round((view.width - width) / 2)
+        y: Math.round((view.height - height) / 2)
+        padding: 14
+        closePolicy: Popup.CloseOnEscape
+
+        function configNumber(key, fallback) {
+            const parsed = Number(Chiaki.window.dlss5RenoDxConfig(key, String(fallback)));
+            return isNaN(parsed) ? fallback : parsed;
+        }
+        function saveNumber(key, value) {
+            Chiaki.window.setDlss5RenoDxConfig(key, Number(value).toFixed(2));
+        }
+
+        onAboutToShow: {
+            view.dlss5PanelActive = true;
+            view.grabInput(neuralSwitch);
+            view.updateOverlayInteractionActive();
+        }
+        onClosed: {
+            view.releaseInput();
+            view.dlss5PanelActive = false;
+            view.updateOverlayInteractionActive();
+        }
+
+        background: Rectangle { radius: 12; color: "#101A2B"; border.width: 1; border.color: "#2879F6" }
+
+        contentItem: ScrollView {
+            clip: true
+            ColumnLayout {
+                width: dlss5Panel.availableWidth
+                spacing: 7
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Label { text: "DLSS 5 / RenoDX"; color: "white"; font.bold: true; font.pixelSize: 20 }
+                    Item { Layout.fillWidth: true }
+                    Label {
+                        text: Chiaki.window.dlss5BridgeAvailable() ? "BRIDGE ATIVA" : "AGUARDANDO STREAM"
+                        color: Chiaki.window.dlss5BridgeAvailable() ? "#39D98A" : "#FFB13B"
+                        font.bold: true; font.pixelSize: 11
+                    }
+                    ToolButton { text: "X"; onClicked: dlss5Panel.close() }
+                }
+
+                Label {
+                    Layout.fillWidth: true; wrapMode: Text.WordWrap; color: "#AFC4E5"; font.pixelSize: 11
+                    text: "Painel integrado ao DXGI/D3D12. Os valores do RenoDX sao salvos no ReShade."
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    implicitHeight: neuralControls.implicitHeight + 16
+                    radius: 8; color: "#17253B"
+
+                    ColumnLayout {
+                        id: neuralControls
+                        anchors { fill: parent; margins: 8 }
+                        spacing: 3
+                        Label { text: "NEURAL RENDERING"; color: "#78AFFF"; font.bold: true; font.pixelSize: 12 }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Switch {
+                                id: neuralSwitch
+                                text: "DLSS Neural Rendering"
+                                checked: dlss5Panel.configNumber("NeuralUplift", 1) !== 0
+                                enabled: Chiaki.window.dlss5BridgeAvailable()
+                                onClicked: {
+                                    Chiaki.window.toggleDlss5Neural();
+                                    Chiaki.window.setDlss5RenoDxConfig("NeuralUplift", checked ? "1" : "0");
+                                }
+                            }
+                            Switch {
+                                text: "Upscaling (WIP)"
+                                checked: dlss5Panel.configNumber("NREnableUpscaling", 1) !== 0
+                                onClicked: Chiaki.window.setDlss5RenoDxConfig("NREnableUpscaling", checked ? "1" : "0")
+                            }
+                        }
+
+                        GridLayout {
+                            Layout.fillWidth: true; columns: 4; columnSpacing: 8; rowSpacing: 3
+                            Label { text: "Preset"; color: "white" }
+                            ComboBox {
+                                Layout.fillWidth: true; model: ["Default", "Preset #1", "Preset #2", "Preset #3"]
+                                currentIndex: Math.max(0, Math.min(3, dlss5Panel.configNumber("NRPreset", 0)))
+                                onActivated: Chiaki.window.setDlss5RenoDxConfig("NRPreset", String(currentIndex))
+                            }
+                            Label { text: "Estilo"; color: "white" }
+                            ComboBox {
+                                Layout.fillWidth: true; model: ["Natural", "Cinematic"]
+                                currentIndex: Math.max(0, Math.min(1, dlss5Panel.configNumber("NRStyle", 1) - 1))
+                                onActivated: Chiaki.window.setDlss5RenoDxConfig("NRStyle", String(currentIndex + 1))
+                            }
+                        }
+
+                        Label { text: "Intensidade geral   " + overallSlider.value.toFixed(2); color: "white"; font.pixelSize: 12 }
+                        Slider { id: overallSlider; Layout.fillWidth: true; from: 0; to: 2; stepSize: 0.05; value: dlss5Panel.configNumber("NRIntensity", 2); onMoved: dlss5Panel.saveNumber("NRIntensity", value) }
+                        Label { text: "Tom global   " + globalToneSlider.value.toFixed(2); color: "white"; font.pixelSize: 12 }
+                        Slider { id: globalToneSlider; Layout.fillWidth: true; from: 0; to: 2; stepSize: 0.05; value: dlss5Panel.configNumber("NRGlobalTone", 2); onMoved: dlss5Panel.saveNumber("NRGlobalTone", value) }
+                        Label { text: "Tom local   " + localToneSlider.value.toFixed(2); color: "white"; font.pixelSize: 12 }
+                        Slider { id: localToneSlider; Layout.fillWidth: true; from: 0; to: 2; stepSize: 0.05; value: dlss5Panel.configNumber("NRLocalTone", 2); onMoved: dlss5Panel.saveNumber("NRLocalTone", value) }
+                        Label { text: "Estrutura   " + structureSlider.value.toFixed(2); color: "white"; font.pixelSize: 12 }
+                        Slider { id: structureSlider; Layout.fillWidth: true; from: 0; to: 2; stepSize: 0.05; value: dlss5Panel.configNumber("NRLocalStructure", 2); onMoved: dlss5Panel.saveNumber("NRLocalStructure", value) }
+                        Label { text: "Personagem / pele   " + skinSlider.value.toFixed(2); color: "white"; font.pixelSize: 12 }
+                        Slider { id: skinSlider; Layout.fillWidth: true; from: -1; to: 2; stepSize: 0.05; value: dlss5Panel.configNumber("NRSkinStructure", -1); onMoved: dlss5Panel.saveNumber("NRSkinStructure", value) }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Switch { text: "Mascara automatica/personagem"; checked: dlss5Panel.configNumber("NRAutoMask", 1) !== 0; onClicked: Chiaki.window.setDlss5RenoDxConfig("NRAutoMask", checked ? "1" : "0") }
+                            Switch { text: "Correcao da UI"; checked: dlss5Panel.configNumber("NRUICorrection", 1) !== 0; onClicked: Chiaki.window.setDlss5RenoDxConfig("NRUICorrection", checked ? "1" : "0") }
+                        }
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Switch { id: sharpenSwitchCompact; text: "Nitidez"; checked: true; onClicked: Chiaki.window.setDlss5Technique("DLSS5_Sharpen.fx", "DLSS5_Sharpen", checked) }
+                    Label { text: sharpenSliderCompact.value.toFixed(2); color: "white" }
+                    Slider { id: sharpenSliderCompact; Layout.fillWidth: true; from: 0; to: 1; value: 0.35; stepSize: 0.01; onMoved: Chiaki.window.setDlss5Float("DLSS5_Sharpen.fx", "Sharpness", value) }
+                }
+            }
+        }
+    }
+
+    Dialog {
+        id: dlss5LegacyPanel
+        parent: Overlay.overlay
+        modal: true
+        width: Math.min(720, view.width - 48)
+        height: Math.min(720, view.height - 48)
+        x: Math.round((view.width - width) / 2)
+        y: Math.round((view.height - height) / 2)
+        padding: 24
+        closePolicy: Popup.CloseOnEscape
+
+        onAboutToShow: {
+            view.dlss5PanelActive = true;
+            view.grabInput(neuralButton);
+            view.updateOverlayInteractionActive();
+        }
+        onClosed: {
+            view.releaseInput();
+            view.dlss5PanelActive = false;
+            view.updateOverlayInteractionActive();
+        }
+
+        background: Rectangle {
+            radius: 18
+            color: "#101A2B"
+            border.width: 2
+            border.color: "#2879F6"
+        }
+
+        contentItem: ScrollView {
+            clip: true
+            ColumnLayout {
+                width: dlss5Panel.availableWidth
+                spacing: 18
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Label { text: "DLSS 5 / ReShade"; color: "white"; font.bold: true; font.pixelSize: 27 }
+                    Item { Layout.fillWidth: true }
+                    Label {
+                        text: Chiaki.window.dlss5BridgeAvailable() ? "BRIDGE ATIVA" : "AGUARDANDO STREAM"
+                        color: Chiaki.window.dlss5BridgeAvailable() ? "#39D98A" : "#FFB13B"
+                        font.bold: true
+                    }
+                }
+
+                Label {
+                    Layout.fillWidth: true
+                    wrapMode: Text.WordWrap
+                    color: "#AFC4E5"
+                    text: "Painel nativo do Zanit. As mudanças são enviadas ao ReShade pelo DLSS5 Bridge sem trocar o renderer DXGI/D3D12."
+                }
+
+                Button {
+                    id: neuralButton
+                    Layout.fillWidth: true
+                    text: "Alternar DLSS Neural Rendering"
+                    enabled: Chiaki.window.dlss5BridgeAvailable()
+                    onClicked: Chiaki.window.toggleDlss5Neural()
+                    Material.background: "#155EEF"
+                }
+
+                Switch {
+                    id: sharpenSwitch
+                    text: "Nitidez DLSS 5"
+                    checked: true
+                    onToggled: Chiaki.window.setDlss5Technique("DLSS5_Sharpen.fx", "DLSS5_Sharpen", checked)
+                }
+                Label { text: "Nitidez: " + sharpenSlider.value.toFixed(2); color: "white" }
+                Slider {
+                    id: sharpenSlider
+                    Layout.fillWidth: true
+                    from: 0.0; to: 1.0; value: 0.35; stepSize: 0.01
+                    onMoved: Chiaki.window.setDlss5Float("DLSS5_Sharpen.fx", "Sharpness", value)
+                }
+
+                Switch {
+                    id: gradeSwitch
+                    text: "Correção de cor"
+                    checked: false
+                    onToggled: Chiaki.window.setDlss5Technique("DLSS5_Grade.fx", "DLSS5_Grade", checked)
+                }
+                Label { text: "Exposição: " + exposureSlider.value.toFixed(2); color: "white" }
+                Slider {
+                    id: exposureSlider
+                    Layout.fillWidth: true
+                    from: -2.0; to: 2.0; value: 0.0; stepSize: 0.05
+                    onMoved: Chiaki.window.setDlss5Float("DLSS5_Grade.fx", "Exposure", value)
+                }
+                Label { text: "Contraste: " + contrastSlider.value.toFixed(2); color: "white" }
+                Slider {
+                    id: contrastSlider
+                    Layout.fillWidth: true
+                    from: 0.5; to: 1.5; value: 1.0; stepSize: 0.01
+                    onMoved: Chiaki.window.setDlss5Float("DLSS5_Grade.fx", "Contrast", value)
+                }
+                Label { text: "Saturação: " + saturationSlider.value.toFixed(2); color: "white" }
+                Slider {
+                    id: saturationSlider
+                    Layout.fillWidth: true
+                    from: 0.0; to: 2.0; value: 1.0; stepSize: 0.01
+                    onMoved: Chiaki.window.setDlss5Float("DLSS5_Grade.fx", "Saturation", value)
+                }
+
+                Button {
+                    Layout.alignment: Qt.AlignRight
+                    text: "Fechar"
+                    onClicked: dlss5Panel.close()
+                }
+            }
+        }
+    }
+
     Connections {
         target: Chiaki
 
@@ -1283,6 +1573,14 @@ Item {
             if (sessionPinDialog.opened || sessionStopDialog.opened || separateSessionPinWindow.visible || separateSessionStopWindow.visible)
                 return;
             menuController.toggle();
+            Chiaki.window.requestOverlayUpdate();
+        }
+
+        function onDlss5PanelRequested() {
+            if (dlss5Panel.opened)
+                dlss5Panel.close();
+            else
+                dlss5Panel.open();
             Chiaki.window.requestOverlayUpdate();
         }
     }

@@ -13,30 +13,30 @@ Item {
     readonly property bool preferSeparateStreamSettingsWindows: Chiaki.window.runtimeRendererBackend === 1 && Chiaki.session
     property bool useSeparateStreamSettingsWindows: false
 
-    // Zanith UI preferences. Stored separately from the upstream Chiaki settings
+    // Zanit UI preferences. Stored separately from the upstream Chiaki settings
     // so users can keep their console registrations and stream configuration.
     Core.Settings {
-        id: zanithPreferences
-        category: "Zanith"
+        id: zanitPreferences
+        category: "Zanit"
         property string language: "pt_BR"
     }
-    property alias language: zanithPreferences.language
+    property alias language: zanitPreferences.language
 
-    readonly property color zanithBackground: "#0B1220"
-    readonly property color zanithSurface: "#111B2E"
-    readonly property color zanithSurfaceAlt: "#17233A"
-    readonly property color zanithBorder: "#283A5C"
-    readonly property color zanithBlue: "#1677FF"
-    readonly property color zanithBlueStrong: "#0057E7"
-    readonly property color zanithText: "#F4F7FF"
-    readonly property color zanithMuted: "#AFC0DD"
-    readonly property color zanithGreen: "#18E76F"
+    readonly property color zanitBackground: "#0B1220"
+    readonly property color zanitSurface: "#111B2E"
+    readonly property color zanitSurfaceAlt: "#17233A"
+    readonly property color zanitBorder: "#283A5C"
+    readonly property color zanitBlue: "#1677FF"
+    readonly property color zanitBlueStrong: "#0057E7"
+    readonly property color zanitText: "#F4F7FF"
+    readonly property color zanitMuted: "#AFC0DD"
+    readonly property color zanitGreen: "#18E76F"
 
     Material.theme: Material.Dark
-    Material.primary: zanithBlueStrong
-    Material.accent: zanithBlue
-    Material.background: zanithBackground
-    Material.foreground: zanithText
+    Material.primary: zanitBlueStrong
+    Material.accent: zanitBlue
+    Material.background: zanitBackground
+    Material.foreground: zanitText
 
     function zt(en, pt) {
         return language === "pt_BR" ? pt : en;
@@ -205,7 +205,7 @@ Item {
 
     function showRendererFallbackDialog(reason) {
         showInfoDialog(qsTr("Renderer Fallback"),
-                       root.zt("Vulkan renderer is unavailable and Zanith switched to OpenGL.\n\nReason: %1", "O renderer Vulkan não está disponível e o Zanith mudou para OpenGL.\n\nMotivo: %1").arg(reason));
+                       root.zt("Vulkan renderer is unavailable and Zanit switched to OpenGL.\n\nReason: %1", "O renderer Vulkan não está disponível e o Zanit mudou para OpenGL.\n\nMotivo: %1").arg(reason));
     }
 
     function showRemindDialog(title, text, remotePlay, callback) {

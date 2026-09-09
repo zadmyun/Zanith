@@ -518,7 +518,7 @@ DialogView {
             radius: 18
             color: "#0F192A"
             border.width: 1
-            border.color: root.zanithBorder
+            border.color: root.zanitBorder
 
             ColumnLayout {
                 anchors {
@@ -551,7 +551,7 @@ DialogView {
                         leftPadding: 14
                         rightPadding: 14
                         Material.background: bar.currentIndex === modelData.page ? "#173F9C" : "transparent"
-                        Material.foreground: bar.currentIndex === modelData.page ? "#FFFFFF" : root.zanithMuted
+                        Material.foreground: bar.currentIndex === modelData.page ? "#FFFFFF" : root.zanitMuted
 
                         contentItem: RowLayout {
                             spacing: 11
@@ -568,7 +568,7 @@ DialogView {
                                 text: modelData.label
                                 font.pixelSize: 16
                                 font.bold: bar.currentIndex === modelData.page
-                                color: bar.currentIndex === modelData.page ? "#FFFFFF" : root.zanithMuted
+                                color: bar.currentIndex === modelData.page ? "#FFFFFF" : root.zanitMuted
                                 Layout.alignment: Qt.AlignVCenter
                             }
                             Item { Layout.fillWidth: true }
@@ -589,7 +589,7 @@ DialogView {
                 spacing: 5
                 Label {
                     text: root.zt("Language", "Idioma")
-                    color: root.zanithMuted
+                    color: root.zanitMuted
                     font.pixelSize: 13
                 }
                 ComboBox {
@@ -597,7 +597,7 @@ DialogView {
                     model: ["English", "Português (Brasil)"]
                     currentIndex: root.language === "pt_BR" ? 1 : 0
                     onActivated: (index) => root.language = index === 1 ? "pt_BR" : "en_US"
-                    Material.background: root.zanithSurfaceAlt
+                    Material.background: root.zanitSurfaceAlt
                 }
             }
         }
@@ -614,7 +614,7 @@ DialogView {
             radius: 18
             color: "#0F192A"
             border.width: 1
-            border.color: root.zanithBorder
+            border.color: root.zanitBorder
         }
 
         StackLayout {
@@ -688,7 +688,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: generalLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: "(" + disconnectAction.currentText + ")"
                             }
 
@@ -711,7 +711,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: generalLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: "(" + suspendActionCombo.currentText + ")"
                             }
 
@@ -742,7 +742,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: generalLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: Chiaki.settings.steamDeckHaptics ? root.zt("(Checked)", "(Marcado)") : root.zt("(Unchecked)", "(Desmarcado)")
                                 visible: typeof Chiaki.settings.steamDeckHaptics !== "undefined"
                             }
@@ -774,7 +774,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: generalLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: Chiaki.settings.verticalDeck ? root.zt("(Checked)", "(Marcado)") : root.zt("(Unchecked)", "(Desmarcado)")
                                 visible: typeof Chiaki.settings.verticalDeck !== "undefined"
                             }
@@ -798,7 +798,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: generalLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: "(" + audioVideoModeCombo.currentText + ")"
                                 wrapMode: Text.WordWrap
                             }
@@ -856,7 +856,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: generalLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: streamerMode.checked ? root.zt("(Checked)", "(Marcado)") : root.zt("(Unchecked)", "(Desmarcado)")
                             }
 
@@ -881,7 +881,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: generalLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: streamMenu.checked ? root.zt("(Checked)", "(Marcado)") : root.zt("(Unchecked)", "(Desmarcado)")
                             }
 
@@ -956,7 +956,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: generalLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 wrapMode: Text.WordWrap
                                 text: {
                                     const a = Chiaki.settings.streamMenuShortcut1;
@@ -2502,7 +2502,7 @@ DialogView {
                         Rectangle {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 1
-                            color: root.zanithBorder
+                            color: root.zanitBorder
                             opacity: 0.7
                         }
 
@@ -2644,7 +2644,7 @@ DialogView {
                         Rectangle {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 1
-                            color: root.zanithBorder
+                            color: root.zanitBorder
                             opacity: 0.7
                         }
 
@@ -2681,7 +2681,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: controllersLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: backgroundController.checked ? root.zt("(Checked)", "(Marcado)") : root.zt("(Unchecked)", "(Desmarcado)")
                             }
 
@@ -2703,7 +2703,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: controllersLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: dpadTouch.checked ? root.zt("(Checked)", "(Marcado)") : root.zt("(Unchecked)", "(Desmarcado)")
                             }
 
@@ -2744,7 +2744,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: controllersLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: root.zt("(0.3 mm)", "(0,3 mm)")
                                 visible: Chiaki.settings.dpadTouchEnabled
                             }
@@ -2824,7 +2824,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: controllersLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 wrapMode: Text.WordWrap
                                 text: {
                                     const a = Chiaki.settings.dpadTouchShortcut1;
@@ -2865,7 +2865,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: controllersLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: posButtons.checked ? root.zt("(Checked)", "(Marcado)") : root.zt("(Unchecked)", "(Desmarcado)")
                             }
 
@@ -2889,7 +2889,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: controllersLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 text: "(" + rumbleHaptics.currentText + ")"
                             }
 
@@ -2931,7 +2931,7 @@ DialogView {
                             Label {
                                 Layout.preferredWidth: controllersLayout.stateColumnWidth
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                                color: root.zanithMuted
+                                color: root.zanitMuted
                                 wrapMode: Text.WordWrap
                                 text: root.zt("(console setting)", "(configuração do console)")
                             }
@@ -3152,7 +3152,7 @@ DialogView {
 
                     C.Button {
                         id: aboutButton
-                        text: root.zt("About Zanith", "Sobre o Zanith")
+                        text: root.zt("About Zanit", "Sobre o Zanit")
                         onClicked: aboutDialog.open()
                         Material.roundedScale: Material.SmallScale
                     }
@@ -3213,7 +3213,7 @@ DialogView {
             parent: Overlay.overlay
             x: Math.round((root.width - width) / 2)
             y: Math.round((root.height - height) / 2)
-            title: root.zt("About Zanith", "Sobre o Zanith")
+            title: root.zt("About Zanit", "Sobre o Zanit")
             modal: true
             standardButtons: Dialog.Ok
             Material.roundedScale: Material.MediumScale
@@ -3229,7 +3229,7 @@ DialogView {
                     Layout.preferredWidth: 200
                     fillMode: Image.PreserveAspectFit
                     verticalAlignment: Image.AlignTop
-                    source: "qrc:/icons/zanith-logo.svg"
+                    source: "qrc:/icons/zanit-logo.svg"
                 }
 
                 Label {
@@ -3237,12 +3237,12 @@ DialogView {
                     verticalAlignment: Text.AlignTop
                     wrapMode: Text.Wrap
                     text: root.zt(
-                        "<h1>Zanith</h1> version %1" +
+                        "<h1>Zanit</h1> version %1" +
                         "<p>Modified user interface based on <b>chiaki-ng</b> by Street Pea, itself based on Chiaki by Florian Märkl.</p>" +
                         "<p>This modified build is distributed under the GNU Affero General Public License v3. " +
                         "Original copyright and license notices are preserved in the source package.</p>" +
                         "<p>This project is not endorsed by Sony Interactive Entertainment.</p>",
-                        "<h1>Zanith</h1> versão %1" +
+                        "<h1>Zanit</h1> versão %1" +
                         "<p>Interface modificada baseada no <b>chiaki-ng</b> de Street Pea, que por sua vez é baseado no Chiaki de Florian Märkl.</p>" +
                         "<p>Esta versão modificada é distribuída sob a GNU Affero General Public License v3. " +
                         "Os avisos originais de copyright e licença são preservados no pacote do código-fonte.</p>" +

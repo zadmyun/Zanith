@@ -65,6 +65,9 @@ class QmlMainWindow : public QWindow
     Q_PROPERTY(VideoPreset videoPreset READ videoPreset WRITE setVideoPreset NOTIFY videoPresetChanged)
     Q_PROPERTY(bool directStream READ directStream NOTIFY directStreamChanged)
     Q_PROPERTY(int runtimeRendererBackend READ runtimeRendererBackend CONSTANT)
+    Q_PROPERTY(bool dlss5RuntimeAvailable READ dlss5RuntimeAvailable CONSTANT)
+    Q_PROPERTY(bool dlss5RuntimeLoaded READ dlss5RuntimeLoaded CONSTANT)
+    Q_PROPERTY(QString dlss5RuntimeStatus READ dlss5RuntimeStatus CONSTANT)
     Q_PROPERTY(double queueDepthAverage READ queueDepthAverage NOTIFY queueDepthAverageChanged)
     Q_PROPERTY(double pendingFrameAge READ pendingFrameAge NOTIFY pendingFrameAgeChanged)
 
@@ -114,6 +117,9 @@ public:
 
     bool directStream() const;
     int runtimeRendererBackend() const { return static_cast<int>(render_backend); }
+    bool dlss5RuntimeAvailable() const;
+    bool dlss5RuntimeLoaded() const;
+    QString dlss5RuntimeStatus() const;
     bool loadingTransitionComplete() const { return loading_transition_complete.loadAcquire() != 0; }
 
     bool keepVideo() const;
@@ -148,6 +154,12 @@ public:
 
     Q_INVOKABLE void grabInput();
     Q_INVOKABLE void releaseInput();
+    Q_INVOKABLE bool dlss5BridgeAvailable() const;
+    Q_INVOKABLE bool setDlss5Technique(const QString &effect, const QString &technique, bool enabled);
+    Q_INVOKABLE bool setDlss5Float(const QString &effect, const QString &name, double value);
+    Q_INVOKABLE bool toggleDlss5Neural();
+    Q_INVOKABLE QString dlss5RenoDxConfig(const QString &key, const QString &fallback) const;
+    Q_INVOKABLE bool setDlss5RenoDxConfig(const QString &key, const QString &value);
     Q_INVOKABLE void requestOverlayUpdate();
     Q_INVOKABLE void setOverlayInteractionActive(bool active);
     Q_INVOKABLE void setStatsOverlayActive(bool active);
@@ -177,6 +189,7 @@ signals:
     void zoomFactorChanged();
     void videoPresetChanged();
     void menuRequested();
+    void dlss5PanelRequested();
     void directStreamChanged();
     void queueDepthAverageChanged();
     void pendingFrameAgeChanged();

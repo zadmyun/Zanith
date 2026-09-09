@@ -42,12 +42,16 @@ cmake -S . -B build -G Ninja \
     -DCHIAKI_ENABLE_TESTS=OFF
 cmake --build build --config Release --target chiaki
 
-rm -rf Zanith-Win
-./scripts/deploy-windows-msys2.sh Zanith-Win build/gui/Zanith.exe "$ROOT/build/third-party/cpp-steam-tools" /mingw64 gui/src/qml
-cp ZANITH_MODIFICATIONS.md Zanith-Win/
-mkdir -p Zanith-Win/licenses
-cp LICENSES/AGPL-3.0-only-OpenSSL.txt Zanith-Win/licenses/
+rm -rf Zanit-Win
+./scripts/deploy-windows-msys2.sh Zanit-Win build/gui/Zanit.exe "$ROOT/build/third-party/cpp-steam-tools" /mingw64 gui/src/qml
+# Reaplica o runtime integrado depois que o diretório portátil é recriado.
+if [[ -f dlss5-runtime/dxgi.dll ]]; then
+    cp -a dlss5-runtime/. Zanit-Win/
+fi
+cp ZANIT_MODIFICATIONS.md Zanit-Win/
+mkdir -p Zanit-Win/licenses
+cp LICENSES/AGPL-3.0-only-OpenSSL.txt Zanit-Win/licenses/
 
 echo
-echo "Portable build ready: $ROOT/Zanith-Win/Zanith.exe"
-echo "Run scripts/build-zanith-local.ps1 from PowerShell to also create the Inno Setup installer."
+echo "Portable build ready: $ROOT/Zanit-Win/Zanit.exe"
+echo "Run scripts/build-zanit-local.ps1 from PowerShell to also create the Inno Setup installer."

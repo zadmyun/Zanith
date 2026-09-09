@@ -7,7 +7,6 @@ if sys.version_info < (3, 0, 0):
 	exit(1)
 
 import platform
-import os
 oldexit = exit
 def exit(code):
 	if platform.system() == "Windows":
@@ -49,8 +48,8 @@ import pprint
 import base64
 
 # Remote Play Windows Client
-CLIENT_ID = os.environ.get("ZANITH_PSN_CLIENT_ID", "")
-CLIENT_SECRET = os.environ.get("ZANITH_PSN_CLIENT_SECRET", "")
+CLIENT_ID = "ba495a24-818c-472b-b12d-ff231c1b5745"
+CLIENT_SECRET = "mvaiZkRsAsI1IBkY"
 
 LOGIN_URL = "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?service_entity=urn:service-entity:psn&response_type=code&client_id={}&redirect_uri=https://remoteplay.dl.playstation.net/remoteplay/redirect&scope=psn:clientapp&request_locale=en_US&ui=pr&service_logo=ps&layout_type=popup&smcid=remoteplay&prompt=always&PlatformPrivacyWs1=minimal&".format(CLIENT_ID)
 TOKEN_URL = "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/token"

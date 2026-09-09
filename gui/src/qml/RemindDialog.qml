@@ -37,7 +37,13 @@ Dialog {
         if(!remotePlay && Chiaki.settings.remotePlayAsk)
         {
             if(!Chiaki.settings.psnRefreshToken || !Chiaki.settings.psnAuthToken || !Chiaki.settings.psnAuthTokenExpiry || !Chiaki.settings.psnAccountId)
-                root.showRemindDialog(qsTr("Remote Play via PSN"), qsTr("Would you like to connect to PSN?\nThis enables:\n- Automatic registration\n- Playing outside of your home network without port forwarding?") + "\n\n" + qsTr("(Note: If you select no now and want to do this later, go to the Config section of the settings.)"), true, () => root.showPSNTokenDialog(false));
+                root.showRemindDialog(
+                    root.zt("Remote Play via PSN", "Remote Play via PSN"),
+                    root.zt(
+                        "Would you like to connect to PSN?\nThis enables:\n- Automatic registration\n- Playing outside of your home network without port forwarding?\n\n(Note: If you select no now and want to do this later, go to the Config section of the settings.)",
+                        "Deseja conectar à PSN?\nIsso habilita:\n- Registro automático\n- Jogar fora da sua rede doméstica sem redirecionamento de portas\n\n(Observação: se escolher Não agora, você poderá fazer isso depois na seção Perfis das configurações.)"),
+                    true,
+                    () => root.showPSNTokenDialog(false));
             else
                 Chiaki.settings.remotePlayAsk = false;
         }
@@ -70,7 +76,7 @@ Dialog {
             spacing: 20
 
             Button {
-                text: qsTr("Yes")
+                text: root.zt("Yes", "Sim")
                 Material.background: Material.accent
                 flat: true
                 leftPadding: 50
@@ -92,7 +98,7 @@ Dialog {
 
             Button {
                 Material.background: Material.accent
-                text: qsTr("No")
+                text: root.zt("No", "Não")
                 flat: true
                 leftPadding: 50
                 onClicked: dialog.reject()
@@ -113,7 +119,7 @@ Dialog {
 
             Button {
                 Material.background: Material.accent
-                text: qsTr("Remind Me Later")
+                text: root.zt("Remind Me Later", "Lembrar mais tarde")
                 flat: true
                 leftPadding: 50
                 onClicked: dialog.close()

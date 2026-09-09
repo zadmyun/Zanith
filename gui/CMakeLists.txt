@@ -22,6 +22,8 @@ endif()
 set(SOURCE_FILES
 	include/exception.h
 	src/main.cpp
+	include/dlss5integration.h
+	src/dlss5integration.cpp
 	include/discoverymanager.h
 	src/discoverymanager.cpp
 	include/streamsession.h
@@ -95,7 +97,20 @@ add_executable(chiaki WIN32
 
 # Keep the upstream CMake target name for compatibility, but brand the Windows executable.
 if(WIN32)
-    set_target_properties(chiaki PROPERTIES OUTPUT_NAME "Zanith")
+    set_target_properties(chiaki PROPERTIES OUTPUT_NAME "Zanit")
+
+    # Optional local DLSS 5/ReShade runtime. Keeping it as a directory beside
+    # the source avoids compiling third-party binaries into Zanit while still
+    # producing a self-contained portable build for this machine.
+    set(DLSS5_RUNTIME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../dlss5-runtime")
+    if(EXISTS "${DLSS5_RUNTIME_DIR}/dxgi.dll")
+        add_custom_command(TARGET chiaki POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                    "${DLSS5_RUNTIME_DIR}"
+                    "$<TARGET_FILE_DIR:chiaki>"
+            COMMENT "Deploying local DLSS 5 / ReShade runtime")
+        install(DIRECTORY "${DLSS5_RUNTIME_DIR}/" DESTINATION bin)
+    endif()
 endif()
 target_include_directories(chiaki PRIVATE include)
 

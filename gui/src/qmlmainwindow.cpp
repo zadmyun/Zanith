@@ -1,4 +1,5 @@
 #include "qmlmainwindow.h"
+#include "dlss5integration.h"
 #include "qmlbackend.h"
 #include "qmlsvgprovider.h"
 #include "chiaki/log.h"
@@ -2807,6 +2808,59 @@ bool QmlMainWindow::directStream() const
     return direct_stream;
 }
 
+bool QmlMainWindow::dlss5RuntimeAvailable() const
+{
+    return Dlss5Integration::runtimeAvailable();
+}
+
+bool QmlMainWindow::dlss5RuntimeLoaded() const
+{
+    return Dlss5Integration::runtimeLoaded();
+}
+
+bool QmlMainWindow::dlss5BridgeAvailable() const
+{
+    return Dlss5Integration::bridgeAvailable();
+}
+
+bool QmlMainWindow::setDlss5Technique(const QString &effect, const QString &technique, bool enabled)
+{
+    const QByteArray effectName = effect.toUtf8();
+    const QByteArray techniqueName = technique.toUtf8();
+    return Dlss5Integration::setTechniqueEnabled(effectName.constData(), techniqueName.constData(), enabled);
+}
+
+bool QmlMainWindow::setDlss5Float(const QString &effect, const QString &name, double value)
+{
+    const QByteArray effectName = effect.toUtf8();
+    const QByteArray uniformName = name.toUtf8();
+    return Dlss5Integration::setUniformFloat(effectName.constData(), uniformName.constData(), static_cast<float>(value));
+}
+
+bool QmlMainWindow::toggleDlss5Neural()
+{
+    return Dlss5Integration::toggleNeuralRendering();
+}
+
+QString QmlMainWindow::dlss5RenoDxConfig(const QString &key, const QString &fallback) const
+{
+    const QByteArray keyName = key.toUtf8();
+    const QByteArray fallbackValue = fallback.toUtf8();
+    return Dlss5Integration::getRenoDxConfig(keyName.constData(), fallbackValue.constData());
+}
+
+bool QmlMainWindow::setDlss5RenoDxConfig(const QString &key, const QString &value)
+{
+    const QByteArray keyName = key.toUtf8();
+    const QByteArray configValue = value.toUtf8();
+    return Dlss5Integration::setRenoDxConfig(keyName.constData(), configValue.constData());
+}
+
+QString QmlMainWindow::dlss5RuntimeStatus() const
+{
+    return Dlss5Integration::status();
+}
+
 QmlMainWindow::VideoMode QmlMainWindow::videoMode() const
 {
     return video_mode;
@@ -2847,9 +2901,9 @@ void QmlMainWindow::setSettings(Settings *new_settings)
     QString profile = settings->GetCurrentProfile();
     qCCritical(chiakiGui) << "Current Profile: " << profile;
     if(profile.isEmpty())
-        QGuiApplication::setApplicationDisplayName("Zanith");
+        QGuiApplication::setApplicationDisplayName("Zanit");
     else
-        QGuiApplication::setApplicationDisplayName("Zanith");
+        QGuiApplication::setApplicationDisplayName("Zanit");
     this->setTitle(QGuiApplication::applicationDisplayName());
 }
 

@@ -15,8 +15,8 @@ if (-not (Test-Path $MsysShell)) {
 $UnixRoot = $ProjectRoot -replace '\\','/' -replace '^([A-Za-z]):','/$1'
 $UnixRoot = $UnixRoot.ToLower().Substring(0,2) + $UnixRoot.Substring(2)
 
-Write-Host "Building Zanith 1.2.0 with the same MSYS2 toolchain used by the upstream Windows build..." -ForegroundColor Cyan
-& $MsysShell -defterm -no-start -mingw64 -c "cd '$UnixRoot' && ./scripts/build-zanith-local-msys2.sh"
+Write-Host "Building Zanit 1.2.1 with the same MSYS2 toolchain used by the upstream Windows build..." -ForegroundColor Cyan
+& $MsysShell -defterm -no-start -mingw64 -c "cd '$UnixRoot' && ./scripts/build-zanit-local-msys2.sh"
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 $IsccCandidates = @(
@@ -49,13 +49,13 @@ if (-not $Iscc) {
 if (-not $Iscc) {
     Write-Host "Portable build completed, but Inno Setup 6 was not found." -ForegroundColor Yellow
     Write-Host "Install it with: winget install -e --id JRSoftware.InnoSetup"
-    Write-Host "Then run this script again to generate Zanith-1.2.0-Setup.exe."
+    Write-Host "Then run this script again to generate Zanit-1.2.1-Setup.exe."
     exit 0
 }
 
 Push-Location $ProjectRoot
 try {
-    & $Iscc "scripts\zanith.iss"
+    & $Iscc "scripts\zanit.iss"
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 finally {
@@ -64,5 +64,5 @@ finally {
 
 Write-Host "" 
 Write-Host "Done." -ForegroundColor Green
-Write-Host "Portable: $ProjectRoot\Zanith-Win\Zanith.exe"
-Write-Host "Installer: $ProjectRoot\Zanith-1.2.0-Setup.exe"
+Write-Host "Portable: $ProjectRoot\Zanit-Win\Zanit.exe"
+Write-Host "Installer: $ProjectRoot\Zanit-1.2.1-Setup.exe"

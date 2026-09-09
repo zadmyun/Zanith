@@ -1,12 +1,12 @@
-# Zanith 1.2.0 — UI Fixes
+# Zanit 1.2.1 — UI Fixes
 
-This package contains the UI/layout corrections requested after testing the first Zanith 1.2.0 build.
+This package contains the UI/layout corrections requested after testing the first Zanit 1.2.1 build.
 
 ## Root causes addressed
 
 - General and Controllers used content-sized `RowLayout`s and `ComboBox.WidestText`, so Portuguese labels widened rows beyond the content card.
 - Keys used a 3-column grid where each cell contained a fixed 200 px label + 170 px key button, which was sized around English strings and caused translated labels to overlap neighboring cells.
-- Several requested Portuguese strings were still hardcoded English instead of using the Zanith runtime language binding.
+- Several requested Portuguese strings were still hardcoded English instead of using the Zanit runtime language binding.
 - The startup promotion used `Overlay.overlay` dimensions during early startup, while the overlay could still be unlaid-out, yielding negative/incorrect popup coordinates and an oversized dialog.
 - Sidebar icons depended on Unicode glyphs, which vary by font and could render tiny or missing.
 

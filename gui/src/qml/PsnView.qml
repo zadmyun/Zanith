@@ -181,7 +181,7 @@ Rectangle {
             switch(Chiaki.connectState)
             {
                 case Chiaki.PsnConnectState.LinkingConsole:
-                    infoLabel.text = registOnly ? root.zt("Registering PlayStation console with Zanith ...", "Registrando console PlayStation com o Zanith ...") : root.zt("Linking Zanith with PlayStation console ...", "Vinculando o Zanith ao console PlayStation ...")
+                    infoLabel.text = registOnly ? root.zt("Registering PlayStation console with Zanit ...", "Registrando console PlayStation com o Zanit ...") : root.zt("Linking Zanit with PlayStation console ...", "Vinculando o Zanit ao console PlayStation ...")
                     view.allowClose = false
                     break
                 case Chiaki.PsnConnectState.RegisteringConsole:

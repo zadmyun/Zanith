@@ -1,7 +1,7 @@
 <RCC>
   <qresource prefix="/icons">
-    <file>zanith-logo.svg</file>
-    <file>zanith_promo_qr.png</file>
+    <file>zanit-logo.svg</file>
+    <file>zanit_promo_qr.png</file>
     <file>youtube-channel-avatar.png</file>
     <file>ps5-horizontal.png</file>
 

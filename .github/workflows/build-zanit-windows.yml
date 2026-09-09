@@ -1,11 +1,11 @@
-name: Build Zanith 1.2.0 Windows
+name: Build Zanit 1.2.1 Windows
 
 on:
   workflow_dispatch:
 
 jobs:
   build-windows-x64:
-    name: Build Zanith 1.2.0 x64 installer
+    name: Build Zanit 1.2.1 x64 installer
     runs-on: windows-latest
     defaults:
       run:
@@ -85,41 +85,41 @@ jobs:
           INSTALL_PREFIX=/mingw64 scripts/build-sdl2-compat.sh .
           cp /mingw64/lib/pkgconfig/sdl2-compat.pc /mingw64/lib/pkgconfig/sdl2.pc
 
-      - name: Configure Zanith
+      - name: Configure Zanit
         run: |
           cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCHIAKI_ENABLE_CLI=OFF -DCHIAKI_ENABLE_TESTS=OFF
 
-      - name: Build Zanith
+      - name: Build Zanit
         run: |
           cmake --build build --config Release --clean-first --target chiaki
 
       - name: Deploy Windows runtime
         run: |
-          ./scripts/deploy-windows-msys2.sh Zanith-Win build/gui/Zanith.exe "${{ github.workspace }}/build/third-party/cpp-steam-tools" /mingw64 gui/src/qml
-          cp ZANITH_MODIFICATIONS.md Zanith-Win/
-          mkdir -p Zanith-Win/licenses
-          cp LICENSES/AGPL-3.0-only-OpenSSL.txt Zanith-Win/licenses/
+          ./scripts/deploy-windows-msys2.sh Zanit-Win build/gui/Zanit.exe "${{ github.workspace }}/build/third-party/cpp-steam-tools" /mingw64 gui/src/qml
+          cp ZANIT_MODIFICATIONS.md Zanit-Win/
+          mkdir -p Zanit-Win/licenses
+          cp LICENSES/AGPL-3.0-only-OpenSSL.txt Zanit-Win/licenses/
 
       - name: Create portable ZIP
         run: |
-          zip -r Zanith-1.2.0-Windows-x64-portable.zip Zanith-Win
+          zip -r Zanit-1.2.1-Windows-x64-portable.zip Zanit-Win
 
       - name: Upload portable ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: Zanith-1.2.0-Windows-x64-portable
-          path: Zanith-1.2.0-Windows-x64-portable.zip
+          name: Zanit-1.2.1-Windows-x64-portable
+          path: Zanit-1.2.1-Windows-x64-portable.zip
           if-no-files-found: error
 
       - name: Compile installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.7
         with:
-          path: "scripts/zanith.iss"
+          path: "scripts/zanit.iss"
           options: /O+
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
-          name: Zanith-1.2.0-Windows-x64-Setup
-          path: Zanith-1.2.0-Setup.exe
+          name: Zanit-1.2.1-Windows-x64-Setup
+          path: Zanit-1.2.1-Setup.exe
           if-no-files-found: error

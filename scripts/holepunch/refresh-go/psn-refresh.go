@@ -13,8 +13,6 @@ import (
 )
 
 func main(){
-	clientID := os.Getenv("ZANITH_PSN_CLIENT_ID")
-	clientSecret := os.Getenv("ZANITH_PSN_CLIENT_SECRET")
 
 	client := &http.Client{}
 	data :=url.Values{}
@@ -23,7 +21,7 @@ func main(){
 	data.Set("scope", "psn:clientapp referenceDataService:countryConfig.read pushNotification:webSocket.desktop.connect sessionManager:remotePlaySession.system.update")
 	data.Set("redirect_uri","https://remoteplay.dl.playstation.net/remoteplay/redirect")
 	req, err := http.NewRequest("POST", "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/token", strings.NewReader(data.Encode()))
-	req.SetBasicAuth(clientID, clientSecret)
+	req.SetBasicAuth("ba495a24-818c-472b-b12d-ff231c1b5745", "mvaiZkRsAsI1IBkY")
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 	res, err := client.Do(req)
@@ -34,7 +32,7 @@ func main(){
 	if err != nil {
 		log.Fatal(err)
 	}
-    file, err := os.OpenFile("token.txt", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+    file, err := os.OpenFile("/home/streetpea/Documents/psn-chiaki/token.txt", os.O_WRONLY|os.O_CREATE, 0666)
     if err != nil {
         fmt.Println("File does not exists or cannot be created")
         os.Exit(1)
@@ -51,7 +49,7 @@ func main(){
 	fmt.Fprintf(w, "Expiry Date: %v\n", access.ExpiryDate)
 	w.Flush()
 
-	fmt.Println("Your credentials are saved to: token.txt")
+	fmt.Println("Your credentials are saved to: /home/streetpea/Documents/psn-chiaki/token.txt")
 
 	tokenFile, err := os.OpenFile("/tmp/token.txt", os.O_WRONLY|os.O_CREATE, 0666)
     if err != nil {

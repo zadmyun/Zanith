@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) { return real_main(argc, argv); }
 #include <controllermanager.h>
 #include <discoverymanager.h>
 #include <qmlmainwindow.h>
+#include <dlss5integration.h>
 #include <QApplication>
 #include <QtTypes>
 
@@ -66,6 +67,11 @@ int RunMain(QGuiApplication &app, Settings *settings, bool exit_app_on_stream_ex
 
 int real_main(int argc, char *argv[])
 {
+	// ReShade must install its graphics/input hooks before Qt/libplacebo create
+	// the Vulkan or OpenGL device. It remains in-process; no capture window or
+	// second DLSS application is started.
+	Dlss5Integration::initialize();
+
 	qRegisterMetaType<DiscoveryHost>();
 	qRegisterMetaType<RegisteredHost>();
 	qRegisterMetaType<HostMAC>();
@@ -73,10 +79,10 @@ int real_main(int argc, char *argv[])
 	qRegisterMetaType<ChiakiRegistEventType>();
 	qRegisterMetaType<ChiakiLogLevel>();
 
-	QGuiApplication::setOrganizationName("Zanith");
-	QGuiApplication::setApplicationName("Zanith");
-	QGuiApplication::setApplicationVersion("1.2.0");
-	QGuiApplication::setApplicationDisplayName("Zanith");
+	QGuiApplication::setOrganizationName("Zanit");
+	QGuiApplication::setApplicationName("Zanit");
+	QGuiApplication::setApplicationVersion("1.2.1");
+	QGuiApplication::setApplicationDisplayName("Zanit");
 #if defined(Q_OS_MACOS)
 	qputenv("QT_MTL_NO_TRANSACTION", "1");
 #endif
@@ -85,7 +91,7 @@ int real_main(int argc, char *argv[])
 		QGuiApplication::setDesktopFileName(qEnvironmentVariable("FLATPAK_ID"));
 	else
 #endif
-		QGuiApplication::setDesktopFileName("zanith");
+		QGuiApplication::setDesktopFileName("zanit");
 
 	qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu");
 #if defined(Q_OS_WIN)
@@ -111,7 +117,7 @@ int real_main(int argc, char *argv[])
 		return 1;
 	}
 
-    SDL_SetHint(SDL_HINT_APP_NAME, "Zanith");
+    SDL_SetHint(SDL_HINT_APP_NAME, "Zanit");
 
 	if(SDL_Init(SDL_INIT_AUDIO) < 0)
 	{
@@ -128,7 +134,7 @@ int real_main(int argc, char *argv[])
 #ifdef Q_OS_MACOS
 	QGuiApplication::setWindowIcon(QIcon(":/icons/chiaking_macos.svg"));
 #else
-	QGuiApplication::setWindowIcon(QIcon(":/icons/zanith-logo.svg"));
+	QGuiApplication::setWindowIcon(QIcon(":/icons/zanit-logo.svg"));
 #endif
 
 	QCommandLineParser parser;
@@ -183,7 +189,7 @@ int real_main(int argc, char *argv[])
 		settings.SetCurrentProfile(parser.value(profile_option));
 	Settings alt_settings(parser.isSet(profile_option) ? "" : settings.GetCurrentProfile());
 	if(!settings.GetCurrentProfile().isEmpty())
-		QGuiApplication::setApplicationDisplayName("Zanith");
+		QGuiApplication::setApplicationDisplayName("Zanit");
 	bool use_alt_settings = false;
 	if(!parser.isSet(profile_option))
 		use_alt_settings = true;

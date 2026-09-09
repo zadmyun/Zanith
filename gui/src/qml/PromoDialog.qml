@@ -24,7 +24,7 @@ Popup {
     y: Math.max(24, Math.round((root.height - height) / 2))
 
     Material.theme: Material.Dark
-    Material.background: root.zanithBackground
+    Material.background: root.zanitBackground
 
     Overlay.modal: Rectangle {
         color: "#B0000712"
@@ -33,7 +33,7 @@ Popup {
     background: Rectangle {
         radius: 20
         border.width: 2
-        border.color: root.zanithBlue
+        border.color: root.zanitBlue
         gradient: Gradient {
             GradientStop { position: 0.0; color: "#07101D" }
             GradientStop { position: 1.0; color: "#030914" }
@@ -72,7 +72,7 @@ Popup {
                 radius: 18
                 color: "#0B1525"
                 border.width: 1
-                border.color: root.zanithBorder
+                border.color: root.zanitBorder
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -91,7 +91,7 @@ Popup {
                             width: Math.max(180, Math.min(parent.width - 16, parent.height - 16))
                             height: width
                             fillMode: Image.PreserveAspectFit
-                            source: "qrc:/icons/zanith_promo_qr.png"
+                            source: "qrc:/icons/zanit_promo_qr.png"
                             sourceSize: Qt.size(Math.round(width), Math.round(height))
                         }
                     }
@@ -110,7 +110,7 @@ Popup {
                         Layout.fillWidth: true
                         horizontalAlignment: Text.AlignHCenter
                         text: root.zt("Point your phone camera at the QR code", "Aponte com a câmera do celular")
-                        color: root.zanithMuted
+                        color: root.zanitMuted
                         font.pixelSize: 15
                         wrapMode: Text.WordWrap
                     }
@@ -130,7 +130,7 @@ Popup {
                     Image {
                         Layout.preferredWidth: 54
                         Layout.preferredHeight: 54
-                        source: "qrc:/icons/zanith-logo.svg"
+                        source: "qrc:/icons/zanit-logo.svg"
                         sourceSize: Qt.size(54, 54)
                         fillMode: Image.PreserveAspectFit
                     }

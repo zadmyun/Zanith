@@ -40,7 +40,9 @@ chiaki.conf
 *.vscode
 site/
 
-# Zanith local build outputs
-/Zanith-Win/
-/Zanith-1.2.0-Setup.exe
-/Zanith-1.2.0-Windows-*.zip
+# Zanit local build outputs
+/Zanit-Win/
+/Zanit-1.2.1-Setup.exe
+/Zanit-1.2.1-Windows-*.zip
+/dlss5-runtime/
+/SDL3-*

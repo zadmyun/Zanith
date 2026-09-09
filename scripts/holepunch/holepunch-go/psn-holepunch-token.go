@@ -26,8 +26,6 @@ func generateDuid()(string) {
 }
 
 func main(){
-	clientID := os.Getenv("ZANITH_PSN_CLIENT_ID")
-	clientSecret := os.Getenv("ZANITH_PSN_CLIENT_SECRET")
 	headless := flag.Bool("headless", false, "Operates in Headless mode")
 	flag.Parse()
 	fmt.Println(
@@ -40,11 +38,11 @@ When you see this page, Copy the entire URL from your browser, paste it below an
 	fmt.Printf("Duid: %s with length: %d", duid, len(duid))
 	reader := bufio.NewReader(os.Stdin)
 	if *headless {
-		fmt.Printf("[Headless] You'll need to open this page in a web browser that supports Javascript/ReCaptcha\n[Headless] https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?service_entity=urn:service-entity:psn&response_type=code&client_id=%s&redirect_uri=https://remoteplay.dl.playstation.net/remoteplay/redirect&scope=psn:clientapp referenceDataService:countryConfig.read pushNotification:webSocket.desktop.connect sessionManager:remotePlaySession.system.update&duid=%s&request_locale=en_US&ui=pr&service_logo=ps&layout_type=popup&smcid=remoteplay&prompt=always&PlatformPrivacyWs1=minimal&", clientID, duid)
+		fmt.Printf("[Headless] You'll need to open this page in a web browser that supports Javascript/ReCaptcha\n[Headless] https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?service_entity=urn:service-entity:psn&response_type=code&client_id=ba495a24-818c-472b-b12d-ff231c1b5745&redirect_uri=https://remoteplay.dl.playstation.net/remoteplay/redirect&scope=psn:clientapp referenceDataService:countryConfig.read pushNotification:webSocket.desktop.connect sessionManager:remotePlaySession.system.update&duid=%s&request_locale=en_US&ui=pr&service_logo=ps&layout_type=popup&smcid=remoteplay&prompt=always&PlatformPrivacyWs1=minimal&", duid)
 	} else {
 		fmt.Printf("Press Enter to open the PSN Remote Play login webpage in your browser")
 		reader.ReadString('\n')
-		browser.OpenURL("https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?service_entity=urn:service-entity:psn&response_type=code&client_id=" + clientID + "&redirect_uri=https://remoteplay.dl.playstation.net/remoteplay/redirect&scope=psn:clientapp referenceDataService:countryConfig.read pushNotification:webSocket.desktop.connect sessionManager:remotePlaySession.system.update&duid=" + duid + "&request_locale=en_US&ui=pr&service_logo=ps&layout_type=popup&smcid=remoteplay&prompt=always&PlatformPrivacyWs1=minimal&")
+		browser.OpenURL("https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?service_entity=urn:service-entity:psn&response_type=code&client_id=ba495a24-818c-472b-b12d-ff231c1b5745&redirect_uri=https://remoteplay.dl.playstation.net/remoteplay/redirect&scope=psn:clientapp referenceDataService:countryConfig.read pushNotification:webSocket.desktop.connect sessionManager:remotePlaySession.system.update&duid=" + duid + "&request_locale=en_US&ui=pr&service_logo=ps&layout_type=popup&smcid=remoteplay&prompt=always&PlatformPrivacyWs1=minimal&")
 	}
 
 	fmt.Print("Awaiting Input >")
@@ -66,7 +64,7 @@ When you see this page, Copy the entire URL from your browser, paste it below an
 	data.Set("code", query.Get("code"))
 	data.Set("redirect_uri","https://remoteplay.dl.playstation.net/remoteplay/redirect")
 	req, err := http.NewRequest("POST", "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/token", strings.NewReader(data.Encode()))
-	req.SetBasicAuth(clientID, clientSecret)
+	req.SetBasicAuth("ba495a24-818c-472b-b12d-ff231c1b5745", "mvaiZkRsAsI1IBkY")
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 	res, err := client.Do(req)
@@ -77,7 +75,7 @@ When you see this page, Copy the entire URL from your browser, paste it below an
 	if err != nil {
 		log.Fatal(err)
 	}
-    file, err := os.OpenFile("token.txt", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+    file, err := os.OpenFile("/home/streetpea/Documents/psn-chiaki/token.txt", os.O_WRONLY|os.O_CREATE, 0666)
     if err != nil {
         fmt.Println("File does not exists or cannot be created")
         os.Exit(1)
@@ -94,7 +92,7 @@ When you see this page, Copy the entire URL from your browser, paste it below an
 	fmt.Fprintf(w, "Expiry Date: %v\n", access.ExpiryDate)
 	w.Flush()
 
-	fmt.Println("Your credentials are saved to: token.txt")
+	fmt.Println("Your credentials are saved to: /home/streetpea/Documents/psn-chiaki/token.txt")
 
 	tokenFile, err := os.OpenFile("/tmp/token.txt", os.O_WRONLY|os.O_CREATE, 0666)
     if err != nil {

@@ -15,7 +15,7 @@ Pane {
         {
             root.initialAsk = true;
             if(Chiaki.settings.addSteamShortcutAsk && (typeof Chiaki.createSteamShortcut === "function"))
-                root.showRemindDialog(root.zt("Official Steam artwork + controller layout", "Arte oficial do Steam + layout do controle"), root.zt("Would you like to either create a new non-Steam game for Zanith or update an existing non-Steam game with the official artwork and controller layout?\n\n(Note: If you select no now and want to do this later, use the menu on the main screen.)", "Deseja criar um novo jogo não-Steam para o Zanith ou atualizar um existente com a arte e o layout de controle?\n\n(Se escolher não agora, você poderá fazer isso depois pelo menu da tela principal.)"), false, () => root.showSteamShortcutDialog(true));
+                root.showRemindDialog(root.zt("Official Steam artwork + controller layout", "Arte oficial do Steam + layout do controle"), root.zt("Would you like to either create a new non-Steam game for Zanit or update an existing non-Steam game with the official artwork and controller layout?\n\n(Note: If you select no now and want to do this later, use the menu on the main screen.)", "Deseja criar um novo jogo não-Steam para o Zanit ou atualizar um existente com a arte e o layout de controle?\n\n(Se escolher não agora, você poderá fazer isso depois pelo menu da tela principal.)"), false, () => root.showSteamShortcutDialog(true));
             else if(Chiaki.settings.remotePlayAsk)
             {
                 if(!Chiaki.settings.psnRefreshToken || !Chiaki.settings.psnAuthToken || !Chiaki.settings.psnAuthTokenExpiry || !Chiaki.settings.psnAccountId)
@@ -69,7 +69,7 @@ Pane {
     }
 
     background: Rectangle {
-        color: root.zanithBackground
+        color: root.zanitBackground
         gradient: Gradient {
             GradientStop { position: 0.0; color: "#0D1628" }
             GradientStop { position: 1.0; color: "#080E18" }
@@ -99,7 +99,7 @@ Pane {
             Image {
                 Layout.preferredWidth: 50
                 Layout.preferredHeight: 50
-                source: "qrc:/icons/zanith-logo.svg"
+                source: "qrc:/icons/zanit-logo.svg"
                 sourceSize: Qt.size(50, 50)
                 fillMode: Image.PreserveAspectFit
             }
@@ -107,7 +107,7 @@ Pane {
             ColumnLayout {
                 spacing: 0
                 Label {
-                    text: "Zanith"
+                    text: "Zanit"
                     color: "white"
                     font.bold: true
                     font.pixelSize: 27
@@ -120,6 +120,136 @@ Pane {
             }
 
             Item { Layout.fillWidth: true }
+
+            Rectangle {
+                id: youtubeButton
+                Layout.preferredWidth: dlss5Status.width
+                Layout.preferredHeight: dlss5Status.height
+                radius: height / 2
+                color: youtubeMouse.pressed ? "#C9140C" : (youtubeMouse.containsMouse ? "#FF352D" : "#F3261D")
+                border.width: 2
+                border.color: "#111111"
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 6
+
+                    Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 30
+                        height: 30
+                        radius: 15
+                        color: "#16233A"
+                        border.width: 1
+                        border.color: "#111111"
+                        clip: true
+
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/icons/youtube-channel-avatar.png"
+                            sourceSize: Qt.size(30, 30)
+                            fillMode: Image.PreserveAspectCrop
+                        }
+                    }
+
+                    Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 22
+                        height: 15
+                        radius: 4
+                        color: "white"
+
+                        Canvas {
+                            anchors.centerIn: parent
+                            width: 8
+                            height: 10
+                            onPaint: {
+                                const ctx = getContext("2d");
+                                ctx.clearRect(0, 0, width, height);
+                                ctx.fillStyle = "#F3261D";
+                                ctx.beginPath();
+                                ctx.moveTo(1, 0);
+                                ctx.lineTo(width, height / 2);
+                                ctx.lineTo(1, height);
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                        }
+                    }
+
+                    Column {
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: -2
+
+                        Label {
+                            text: "YouTube"
+                            color: "white"
+                            font.bold: true
+                            font.pixelSize: 13
+                        }
+                        Label {
+                            text: root.zt("SUBSCRIBE TO THE CHANNEL", "INSCREVA-SE NO CANAL")
+                            color: "white"
+                            font.bold: true
+                            font.pixelSize: 7
+                        }
+                    }
+                }
+
+                MouseArea {
+                    id: youtubeMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: Qt.openUrlExternally("https://www.youtube.com/@Zanitzada")
+                }
+
+                ToolTip.visible: youtubeMouse.containsMouse
+                ToolTip.text: root.zt("Open Zanit channel on YouTube", "Abrir o canal do Zanit no YouTube")
+            }
+
+            Rectangle {
+                id: dlss5Status
+                Layout.preferredWidth: dlss5StatusRow.implicitWidth + 28
+                Layout.preferredHeight: 42
+                radius: 21
+                color: Chiaki.window.dlss5RuntimeLoaded ? "#123F57" : "#493B20"
+                border.width: 1
+                border.color: Chiaki.window.dlss5RuntimeLoaded ? "#39D98A" : "#FFB13B"
+
+                Row {
+                    id: dlss5StatusRow
+                    anchors.centerIn: parent
+                    spacing: 8
+
+                    Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 9
+                        height: 9
+                        radius: 5
+                        color: Chiaki.window.dlss5RuntimeLoaded ? "#39D98A" : "#FFB13B"
+                    }
+
+                    Label {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: Chiaki.window.dlss5RuntimeLoaded
+                              ? root.zt("DLSS 5 READY", "DLSS 5 PRONTO")
+                              : root.zt("DLSS 5 OFF", "DLSS 5 DESLIGADO")
+                        color: "white"
+                        font.bold: true
+                        font.pixelSize: 13
+                    }
+                }
+
+                ToolTip.visible: dlss5StatusMouse.containsMouse
+                ToolTip.text: Chiaki.window.dlss5RuntimeStatus
+                MouseArea {
+                    id: dlss5StatusMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    acceptedButtons: Qt.NoButton
+                }
+            }
 
             RoundButton {
                 id: addHostButton
@@ -180,6 +310,15 @@ Pane {
         }
         MenuSeparator { }
         MenuItem {
+            text: root.zt("Zanit on YouTube", "Zanit no YouTube")
+            onTriggered: Qt.openUrlExternally("https://www.youtube.com/@Zanitzada")
+        }
+        MenuItem {
+            text: root.zt("More information about Zanit", "Mais informações sobre o Zanit")
+            onTriggered: promoDialog.open()
+        }
+        MenuSeparator { }
+        MenuItem {
             text: root.zt("Quit", "Sair")
             onTriggered: root.showConfirmDialog(root.zt("Quit", "Sair"), root.zt("Are you sure you want to quit?", "Tem certeza de que deseja sair?"), () => Qt.quit())
         }
@@ -225,9 +364,9 @@ Pane {
 
             background: Rectangle {
                 radius: 22
-                color: delegate.highlighted ? "#172A48" : root.zanithSurface
+                color: delegate.highlighted ? "#172A48" : root.zanitSurface
                 border.width: delegate.highlighted ? 2 : 1
-                border.color: delegate.highlighted ? root.zanithBlue : root.zanithBorder
+                border.color: delegate.highlighted ? root.zanitBlue : root.zanitBorder
             }
 
             function connectToHost() {
@@ -361,7 +500,7 @@ Pane {
 
                     Label {
                         text: modelData.name || root.zt("PlayStation Console", "Console PlayStation")
-                        color: root.zanithText
+                        color: root.zanitText
                         font.bold: true
                         font.pixelSize: 25
                         elide: Text.ElideRight
@@ -371,14 +510,14 @@ Pane {
                     Label {
                         visible: !!modelData.address
                         text: root.zt("Address: ", "Endereço: ") + (Chiaki.settings.streamerMode ? root.zt("hidden", "oculto") : modelData.address)
-                        color: root.zanithMuted
+                        color: root.zanitMuted
                         font.pixelSize: 17
                     }
 
                     Label {
                         visible: !!modelData.mac
                         text: "ID: " + (Chiaki.settings.streamerMode ? root.zt("hidden", "oculto") : modelData.mac) + " (" + (modelData.registered ? root.zt("registered", "registrado") : root.zt("unregistered", "não registrado")) + ")"
-                        color: root.zanithMuted
+                        color: root.zanitMuted
                         font.pixelSize: 17
                     }
 
@@ -417,7 +556,7 @@ Pane {
                             width: 30
                             height: 30
                             radius: 15
-                            color: root.zanithGreen
+                            color: root.zanitGreen
                             opacity: modelData.state === "ready" ? 0.16 : 0.0
                         }
                         Rectangle {
@@ -425,18 +564,18 @@ Pane {
                             width: 18
                             height: 18
                             radius: 9
-                            color: modelData.state === "ready" ? root.zanithGreen : (modelData.state === "standby" ? "#FFB13B" : "#7F8EA8")
+                            color: modelData.state === "ready" ? root.zanitGreen : (modelData.state === "standby" ? "#FFB13B" : "#7F8EA8")
                         }
                     }
 
                     Label {
                         text: root.language === "pt_BR" ? "Status:" : "State:"
-                        color: root.zanithText
+                        color: root.zanitText
                         font.pixelSize: 18
                     }
                     Label {
                         text: root.prettyState(modelData.state)
-                        color: modelData.state === "ready" ? root.zanithGreen : root.zanithText
+                        color: modelData.state === "ready" ? root.zanitGreen : root.zanitText
                         font.bold: modelData.state === "ready"
                         font.pixelSize: 19
                     }
@@ -459,7 +598,7 @@ Pane {
                         focusPolicy: Qt.NoFocus
                         onClicked: delegate.setConsolePin()
                         Material.background: "#202D43"
-                        Material.foreground: root.zanithText
+                        Material.foreground: root.zanitText
                     }
 
                     Button {
@@ -509,7 +648,7 @@ Pane {
                 checked: Chiaki.discoveryEnabled
                 onToggled: Chiaki.discoveryEnabled = !Chiaki.discoveryEnabled
                 Material.background: checked ? "#17243A" : "#202838"
-                Material.foreground: root.zanithBlue
+                Material.foreground: root.zanitBlue
                 ToolTip.visible: hovered
                 ToolTip.text: root.zt("Toggle local console discovery", "Ativar/desativar descoberta de consoles na rede")
             }
@@ -518,13 +657,13 @@ Pane {
                 spacing: 0
                 Label {
                     text: root.zt("PS5 on network", "PS5 na rede")
-                    color: root.zanithText
+                    color: root.zanitText
                     font.bold: true
                     font.pixelSize: 17
                 }
                 Label {
                     text: Chiaki.discoveryEnabled ? root.zt("Connected", "Conectado") : root.zt("Discovery off", "Descoberta desativada")
-                    color: Chiaki.discoveryEnabled ? "#36A6FF" : root.zanithMuted
+                    color: Chiaki.discoveryEnabled ? "#36A6FF" : root.zanitMuted
                     font.pixelSize: 16
                 }
             }

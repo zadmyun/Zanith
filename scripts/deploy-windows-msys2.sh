@@ -53,9 +53,11 @@ extract_dependencies() {
         ldd_output="$(ldd "$binary" 2>&1)" || true
     fi
 
-    printf '%s\n' "$ldd_output" | awk '
-        /=>/ && $(NF-1) != "not" { print $(NF-1) }
-        /^\// { print $1 }
+    # Preserve paths containing spaces. The previous field-based parser
+    # truncated e.g. "/c/Users/.../versao final zanit/...".
+    printf '%s\n' "$ldd_output" | sed -nE '
+        /=>[[:space:]]+not found/! s/^[[:space:]]*.*=>[[:space:]]+(.*)[[:space:]]+\(0x[0-9A-Fa-f]+\)$/\1/p
+        s/^[[:space:]]*(\/.*)[[:space:]]+\(0x[0-9A-Fa-f]+\)$/\1/p
     ' | grep -iv "system32" | grep -iv "windows" || true
 }
 

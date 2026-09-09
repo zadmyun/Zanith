@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# The GitHub source archive used to create Zanith does not contain gitlink
+# The GitHub source archive used to create Zanit does not contain gitlink
 # metadata. These are the exact Windows-relevant submodule revisions used by
 # upstream chiaki-ng commit 6547d8aed03503646fe1043512616e26c03fa9db.
 clone_at() {
     local url="$1"
     local path="$2"
     local commit="$3"
-    if [[ -f "$path/.zanith-submodule-ready" ]]; then
+    if [[ -f "$path/.zanit-submodule-ready" ]]; then
         return
     fi
     rm -rf "$path"
     git clone "$url" "$path"
     git -C "$path" checkout "$commit"
-    touch "$path/.zanith-submodule-ready"
+    touch "$path/.zanit-submodule-ready"
 }
 
 clone_at https://github.com/streetpea/cpp-steam-tools.git third-party/cpp-steam-tools d36565f

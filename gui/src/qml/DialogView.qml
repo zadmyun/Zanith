@@ -48,7 +48,7 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: root.zanithBackground
+        color: root.zanitBackground
         gradient: Gradient {
             GradientStop { position: 0.0; color: "#0D1628" }
             GradientStop { position: 1.0; color: "#080E18" }
@@ -91,14 +91,14 @@ Item {
             Image {
                 Layout.preferredWidth: 42
                 Layout.preferredHeight: 42
-                source: "qrc:/icons/zanith-logo.svg"
+                source: "qrc:/icons/zanit-logo.svg"
                 sourceSize: Qt.size(42, 42)
             }
 
             ColumnLayout {
                 spacing: 0
                 Label {
-                    text: "Zanith"
+                    text: "Zanit"
                     color: "white"
                     font.bold: true
                     font.pixelSize: 23

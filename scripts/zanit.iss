@@ -1,10 +1,10 @@
-; Zanith 1.2.0 installer
+; Zanit 1.2.1 installer
 ; Modified from the upstream chiaki-ng Inno Setup script.
 
-#define MyAppName "Zanith"
-#define MyAppPublisher "Zanith Contributors"
-#define MyAppExeName "Zanith.exe"
-#define MyAppPath "..\Zanith-Win"
+#define MyAppName "Zanit"
+#define MyAppPublisher "Zanit Contributors"
+#define MyAppExeName "Zanit.exe"
+#define MyAppPath "..\Zanit-Win"
 #define MyAppVersion() \
   GetVersionComponents(MyAppPath + "\" + MyAppExeName, Local[0], Local[1], Local[2], Local[3]), \
   Str(Local[0]) + "." + Str(Local[1]) + "." + Str(Local[2])
@@ -15,17 +15,19 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 DefaultDirName={autopf}\{#MyAppName}
+UsePreviousAppDir=no
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 DisableDirPage=no
 ChangesAssociations=yes
 DefaultGroupName={#MyAppName}
+UsePreviousGroup=no
 AllowNoIcons=yes
 LicenseFile=..\LICENSES\AGPL-3.0-only-OpenSSL.txt
 PrivilegesRequiredOverridesAllowed=dialog
-OutputBaseFilename=Zanith-1.2.0-Setup
+OutputBaseFilename=Zanit-1.2.1-Setup
 OutputDir=..
-SetupIconFile=..\gui\zanith.ico
+SetupIconFile=..\gui\zanit.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -39,8 +41,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "{#MyAppPath}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MyAppPath}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\ZANITH_MODIFICATIONS.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppPath}\*"; DestDir: "{app}"; Excludes: "*.log,*.log1,Zanit *.png,*.bak-*"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\ZANIT_MODIFICATIONS.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\LICENSES\AGPL-3.0-only-OpenSSL.txt"; DestDir: "{app}\licenses"; Flags: ignoreversion
 
 [Icons]

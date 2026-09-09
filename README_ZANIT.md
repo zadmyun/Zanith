@@ -1,6 +1,6 @@
-# Zanith
+# Zanit
 
-Zanith is a customized desktop Remote Play client built from the chiaki-ng Canary source.
+Zanit is a customized desktop Remote Play client built from the chiaki-ng Canary source.
 
 This source keeps the upstream streaming/network/controller implementation and focuses its changes on desktop branding, QML interface organization, readability, packaging and a selective English/Português (Brasil) UI option.
 
@@ -10,4 +10,4 @@ See [`BUILD_WINDOWS.md`](BUILD_WINDOWS.md). A GitHub Actions workflow is include
 
 ## License
 
-GNU AGPLv3. See `ZANITH_MODIFICATIONS.md` and `LICENSES/`.
+GNU AGPLv3. See `ZANIT_MODIFICATIONS.md` and `LICENSES/`.
