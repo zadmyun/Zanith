@@ -129,16 +129,19 @@ Pane {
                 color: youtubeMouse.pressed ? "#C9140C" : (youtubeMouse.containsMouse ? "#FF352D" : "#F3261D")
                 border.width: 2
                 border.color: "#111111"
+                clip: true
 
-                Row {
-                    anchors.centerIn: parent
-                    spacing: 6
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.leftMargin: 9
+                    anchors.rightMargin: 9
+                    spacing: 5
 
                     Rectangle {
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 30
-                        height: 30
-                        radius: 15
+                        Layout.preferredWidth: 28
+                        Layout.preferredHeight: 28
+                        Layout.alignment: Qt.AlignVCenter
+                        radius: 14
                         color: "#16233A"
                         border.width: 1
                         border.color: "#111111"
@@ -147,15 +150,15 @@ Pane {
                         Image {
                             anchors.fill: parent
                             source: "qrc:/icons/youtube-channel-avatar.png"
-                            sourceSize: Qt.size(30, 30)
+                            sourceSize: Qt.size(28, 28)
                             fillMode: Image.PreserveAspectCrop
                         }
                     }
 
                     Rectangle {
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 22
-                        height: 15
+                        Layout.preferredWidth: 20
+                        Layout.preferredHeight: 14
+                        Layout.alignment: Qt.AlignVCenter
                         radius: 4
                         color: "white"
 
@@ -177,21 +180,26 @@ Pane {
                         }
                     }
 
-                    Column {
-                        anchors.verticalCenter: parent.verticalCenter
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignVCenter
                         spacing: -2
 
                         Label {
+                            Layout.fillWidth: true
                             text: "YouTube"
                             color: "white"
                             font.bold: true
-                            font.pixelSize: 13
+                            font.pixelSize: 12
+                            elide: Text.ElideRight
                         }
                         Label {
+                            Layout.fillWidth: true
                             text: root.zt("SUBSCRIBE TO THE CHANNEL", "INSCREVA-SE NO CANAL")
                             color: "white"
                             font.bold: true
-                            font.pixelSize: 7
+                            font.pixelSize: 6
+                            elide: Text.ElideRight
                         }
                     }
                 }
